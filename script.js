@@ -15,4 +15,36 @@ function getHumanChoice() {
 let humanScore = 0;
 let computerScore = 0;
 
-console.log({ humanScore, computerScore });
+function capitalize(s) {
+  return s[0].toUpperCase() + s.slice(1).toLowerCase();
+}
+
+function playRound(humanChoice, computerChoice) {
+  const human = humanChoice.toLowerCase();
+  const comp = computerChoice.toLowerCase();
+
+  if (human === comp) {
+    console.log(`Tie! You both chose ${capitalize(human)}. Score: You ${humanScore} - Computer ${computerScore}`);
+    return "tie";
+  }
+
+  const humanWins =
+    (human === "rock"     && comp === "scissors") ||
+    (human === "paper"    && comp === "rock")     ||
+    (human === "scissors" && comp === "paper");
+
+  if (humanWins) {
+    humanScore++;
+    console.log(`You win! ${capitalize(human)} beats ${capitalize(comp)}. Score: You ${humanScore} - Computer ${computerScore}`);
+    return "human";
+  } else {
+    computerScore++;
+    console.log(`You lose! ${capitalize(comp)} beats ${capitalize(human)}. Score: You ${humanScore} - Computer ${computerScore}`);
+    return "computer";
+  }
+}
+
+// quick 1-round test
+const humanSelection = getHumanChoice();
+const computerSelection = getComputerChoice();
+playRound(humanSelection, computerSelection);
