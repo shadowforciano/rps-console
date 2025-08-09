@@ -12,5 +12,7 @@ function getHumanChoice() {
   return String(input).trim().toLowerCase();
 }
 
-// quick test
-// console.log("Human says:", getHumanChoice());
+let humanScore = 0;
+let computerScore = 0;
+
+console.log({ humanScore, computerScore });
