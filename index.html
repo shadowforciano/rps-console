@@ -1,11 +1,38 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <title>Rock Paper Scissors (Console)</title>
-  </head>
-  <body>
-    <h1>Open your browser console to play (Cmd+Option+J on Mac).</h1>
-    <script src="script.js"></script>
-  </body>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Rock Paper Scissors</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main class="app">
+    <h1>Rock • Paper • Scissors</h1>
+
+    <section id="scoreboard" class="card">
+      <div class="row">
+        <div class="score"><span>Player:</span> <strong id="playerScore">0</strong></div>
+        <div class="score"><span>Computer:</span> <strong id="computerScore">0</strong></div>
+      </div>
+      <div class="sub">First to 5 wins</div>
+    </section>
+
+    <section id="buttons" class="card">
+      <button class="choice" data-choice="rock">🪨 Rock</button>
+      <button class="choice" data-choice="paper">📄 Paper</button>
+      <button class="choice" data-choice="scissors">✂️ Scissors</button>
+    </section>
+
+    <section id="feed" class="card" aria-live="polite">
+      <p>Make your move!</p>
+    </section>
+
+    <section id="controls" class="card">
+      <button id="reset" hidden>Play again</button>
+    </section>
+  </main>
+
+  <script src="script.js" defer></script>
+</body>
 </html>

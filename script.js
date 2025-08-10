@@ -1,73 +1,102 @@
-console.log("RPS loaded");
+// --- Game state ---
+const choices = ["rock", "paper", "scissors"];
+const maxPoints = 5;
+let scores = { player: 0, computer: 0 };
+let gameOver = false;
 
-// Returns "rock" | "paper" | "scissors"
+// --- DOM refs ---
+const playerScoreEl = document.getElementById("playerScore");
+const computerScoreEl = document.getElementById("computerScore");
+const feedEl = document.getElementById("feed");
+const choiceButtons = document.querySelectorAll("#buttons .choice");
+const resetBtn = document.getElementById("reset");
+
+// --- Helpers ---
+const randInt = (n) => Math.floor(Math.random() * n);
+const capitalize = (s) => s.charAt(0).toUpperCase() + s.slice(1);
+
 function getComputerChoice() {
-  const r = Math.random();
-  if (r < 1/3) return "rock";
-  if (r < 2/3) return "paper";
-  return "scissors";
+  return choices[randInt(choices.length)];
 }
 
-// Prompts the user and normalizes input
-function getHumanChoice() {
-  const input = prompt("Choose rock, paper, or scissors:");
-  return String(input).trim().toLowerCase();
-}
-
-function playGame() {
-  // Scores are scoped to this game
-  let humanScore = 0;
-  let computerScore = 0;
-
-  function capitalize(s) {
-    return s[0].toUpperCase() + s.slice(1).toLowerCase();
+function playRound(player, computer) {
+  if (player === computer) {
+    return { winner: "tie", message: `Tie! You both chose ${capitalize(player)}.` };
   }
+  const beats = { rock: "scissors", paper: "rock", scissors: "paper" };
+  const playerWins = beats[player] === computer;
 
-  function playRound(humanChoice, computerChoice) {
-    const human = humanChoice.toLowerCase();
-    const comp = computerChoice.toLowerCase();
-
-    if (human === comp) {
-      console.log(`Tie! You both chose ${capitalize(human)}. Score: You ${humanScore} - Computer ${computerScore}`);
-      return "tie";
-    }
-
-    const humanWins =
-      (human === "rock"     && comp === "scissors") ||
-      (human === "paper"    && comp === "rock")     ||
-      (human === "scissors" && comp === "paper");
-
-    if (humanWins) {
-      humanScore++;
-      console.log(`You win! ${capitalize(human)} beats ${capitalize(comp)}. Score: You ${humanScore} - Computer ${computerScore}`);
-      return "human";
-    } else {
-      computerScore++;
-      console.log(`You lose! ${capitalize(comp)} beats ${capitalize(human)}. Score: You ${humanScore} - Computer ${computerScore}`);
-      return "computer";
-    }
-  }
-
-  // Play 5 rounds
-  for (let i = 1; i <= 5; i++) {
-    console.log(`--- Round ${i} ---`);
-    const humanSelection = getHumanChoice();     // call each round
-    const computerSelection = getComputerChoice();
-    playRound(humanSelection, computerSelection);
-  }
-
-  console.log("=== Final Score ===");
-  console.log(`You ${humanScore} - Computer ${computerScore}`);
-
-  if (humanScore > computerScore) {
-    console.log("🏆 You won the game!");
-  } else if (computerScore > humanScore) {
-    console.log("🤖 Computer won the game!");
+  if (playerWins) {
+    return {
+      winner: "player",
+      message: `You win! ${capitalize(player)} beats ${capitalize(computer)}.`
+    };
   } else {
-    console.log("🤝 It's a draw!");
+    return {
+      winner: "computer",
+      message: `You lose! ${capitalize(computer)} beats ${capitalize(player)}.`
+    };
   }
 }
 
-// Auto-start one game on page load
-playGame();
+function updateScores(winner) {
+  if (winner === "player") scores.player += 1;
+  if (winner === "computer") scores.computer += 1;
+  playerScoreEl.textContent = scores.player;
+  computerScoreEl.textContent = scores.computer;
+}
 
+function addToFeed(text, isFinal = false) {
+  const p = document.createElement("p");
+  p.textContent = text;
+  if (isFinal) p.classList.add("final");
+  feedEl.appendChild(p);
+  feedEl.scrollTop = feedEl.scrollHeight;
+}
+
+function setButtonsEnabled(enabled) {
+  choiceButtons.forEach((btn) => (btn.disabled = !enabled));
+}
+
+function checkForWinner() {
+  if (scores.player >= maxPoints || scores.computer >= maxPoints) {
+    gameOver = true;
+    setButtonsEnabled(false);
+    const winnerText =
+      scores.player > scores.computer ? "You win the match! 🏆" : "Computer wins the match! 🤖";
+    addToFeed(winnerText, true);
+    resetBtn.hidden = false;
+  }
+}
+
+function handleChoiceClick(e) {
+  if (gameOver) return;
+
+  const playerChoice = e.currentTarget.dataset.choice;
+  const computerChoice = getComputerChoice();
+
+  const { winner, message } = playRound(playerChoice, computerChoice);
+
+  // keep the console logs if you want to see them in DevTools
+  console.log({ playerChoice, computerChoice, winner, message });
+
+  addToFeed(`You: ${capitalize(playerChoice)} | CPU: ${capitalize(computerChoice)}`);
+  addToFeed(message);
+
+  updateScores(winner);
+  checkForWinner();
+}
+
+function resetGame() {
+  scores = { player: 0, computer: 0 };
+  gameOver = false;
+  playerScoreEl.textContent = "0";
+  computerScoreEl.textContent = "0";
+  feedEl.innerHTML = "<p>Make your move!</p>";
+  setButtonsEnabled(true);
+  resetBtn.hidden = true;
+}
+
+// --- Wire events ---
+choiceButtons.forEach((btn) => btn.addEventListener("click", handleChoiceClick));
+resetBtn.addEventListener("click", resetGame);

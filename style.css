@@ -1,0 +1,67 @@
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+  background: #111;
+  color: #eee;
+  display: grid;
+  place-items: center;
+  min-height: 100svh;
+}
+.app {
+  width: min(720px, 92vw);
+  display: grid;
+  gap: 1rem;
+  padding: 2rem 0;
+}
+h1 { text-align: center; margin: 0 0 .5rem; font-weight: 800; letter-spacing: .5px; }
+
+.card {
+  background: #1b1b1b;
+  border: 1px solid #2a2a2a;
+  border-radius: 16px;
+  padding: 1rem;
+  box-shadow: 0 10px 30px rgba(0,0,0,.35);
+}
+
+#scoreboard .row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  font-size: 1.125rem;
+}
+#scoreboard .sub { opacity: .7; margin-top: .25rem; font-size: .95rem; }
+
+#buttons {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: .75rem;
+}
+#buttons .choice {
+  padding: .85rem 1rem;
+  font-size: 1.05rem;
+  border-radius: 12px;
+  border: 1px solid #2a2a2a;
+  background: #222;
+  color: #eee;
+  cursor: pointer;
+  transition: transform .05s ease, background .15s ease;
+}
+#buttons .choice:hover { background: #262626; }
+#buttons .choice:active { transform: translateY(1px); }
+#buttons .choice:disabled { opacity: .4; cursor: not-allowed; }
+
+#feed p { margin: .25rem 0; line-height: 1.4; }
+#feed .final { font-size: 1.15rem; margin-top: .5rem; }
+
+#reset {
+  padding: .75rem 1rem;
+  font-size: 1rem;
+  border-radius: 12px;
+  border: 1px solid #2a2a2a;
+  background: #2a2a2a;
+  color: #eee;
+  cursor: pointer;
+}
+#reset:hover { background: #2f2f2f; }
